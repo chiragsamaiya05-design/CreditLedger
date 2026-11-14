@@ -23,6 +23,8 @@
 
   const GAUGE_CIRCUMFERENCE = 540.35; // 2 * PI * 86, matches CSS
 
+  const API_BASE_URL = "https://fraudshield-1wj4.onrender.com";
+
   // ---------- Auto-calculate loan-to-income ratio ----------
   function recalcPercent() {
     const income = parseFloat(incomeInput.value);
@@ -36,7 +38,7 @@
   recalcPercent();
 
   // ---------- Service status check ----------
-  fetch("/openapi.json", { method: "GET" })
+  fetch(`${API_BASE_URL}/openapi.json`, { method: "GET" })
     .then((res) => {
       if (res.ok) {
         apiDot.classList.add("ok");
@@ -141,7 +143,7 @@
     };
 
     try {
-      const res = await fetch("/predict", {
+      const res = await fetch(`${API_BASE_URL}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
