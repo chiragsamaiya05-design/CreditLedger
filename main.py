@@ -43,18 +43,25 @@ class LoanApplication(BaseModel): #Pydantic Model (Validation)
 
 
 @app.post('/predict')
-def predict(data : LoanApplication):
-    input_df = pd.DataFrame([data.dict()])
+def predict(data: LoanApplication):
 
-    probability = ml_model['model'].predict_proba(input_df)[:, 1][0]
+    try:
+        input_df = pd.DataFrame([data.model_dump()])
 
-    prediction = int(probability >= ml_model["threshold"])
+        probability = ml_model['model'].predict_proba(input_df)[:, 1][0]
 
-    return {
-        "default_probability": probability,
-        "default_prediction": prediction,
-        "threshold": ml_model["threshold"],
-        "Result": "High Risk" if prediction == 1 else "Low Risk"
-    }
+        prediction = int(probability >= ml_model["threshold"])
+
+        return {
+            "default_probability": float(probability),
+            "default_prediction": prediction,
+            "threshold": float(ml_model["threshold"]),
+            "Result": "High Risk" if prediction == 1 else "Low Risk"
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
