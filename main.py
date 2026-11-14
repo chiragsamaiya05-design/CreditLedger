@@ -24,12 +24,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins = ["*"],
-    allow_methods = ["*"],
-    allow_headers = ["*"],
-)
+
 
 #The only columns that user will see and provide inputs.
 class LoanApplication(BaseModel): #Pydantic Model (Validation)
