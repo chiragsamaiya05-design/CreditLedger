@@ -24,7 +24,7 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://fraudshield-frontend.onrender.com"
+        "https://fraudshield-1-eqqt.onrender.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
