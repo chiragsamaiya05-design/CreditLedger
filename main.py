@@ -24,7 +24,7 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://fraudshield-1wj4.onrender.com"
+        "https://fraudshield-frontend.onrender.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -70,5 +70,3 @@ def predict(data: LoanApplication):
         import traceback
         traceback.print_exc()
         raise
-
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
