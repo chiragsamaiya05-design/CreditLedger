@@ -9,16 +9,6 @@ from fastapi.staticfiles import StaticFiles
 ml_model = {} #{"model":"credit_risk_model.pkl"}
 
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://fraudshield-1wj4.onrender.com"
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,8 +21,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://fraudshield-1wj4.onrender.com"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 
