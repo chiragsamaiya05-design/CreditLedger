@@ -86,37 +86,40 @@
 
  
 function renderVerdict(data) {
+    // 1. Declare variables FIRST
+    const riskCategory = data.risk_category;
+
     const validRiskCategories = [
-    "Very Low Risk",
-    "Low Risk",
-    "Medium Risk",
-    "High Risk",
-    "Very High Risk"
-];
+        "Very Low Risk",
+        "Low Risk",
+        "Medium Risk",
+        "High Risk",
+        "Very High Risk"
+    ];
+
+    // 2. Validate category
+    if (!validRiskCategories.includes(riskCategory)) {
+        throw new Error("Invalid or missing risk category from API.");
+    }
+
+    const probability = Number(data.default_probability);
+    const threshold = Number(data.threshold);
+
+    if (
+        !Number.isFinite(probability) ||
+        !Number.isFinite(threshold) ||
+        probability < 0 || probability > 1 ||
+        threshold < 0 || threshold > 1
+    ) {
+        throw new Error("Invalid probability or threshold received.");
+    }
+
+    const probabilityPct = probability * 100;
+    const thresholdPct = threshold * 100;
 
 
 
-if (!validRiskCategories.includes(riskCategory)) {
-    throw new Error("Invalid or missing risk category from API.");
-}
 
-const probability = Number(data.default_probability);
-const threshold = Number(data.threshold);
-
-if (
-    !Number.isFinite(probability) ||
-    !Number.isFinite(threshold) ||
-    probability < 0 ||
-    probability > 1 ||
-    threshold < 0 ||
-    threshold > 1
-) {
-    throw new Error("Invalid probability or threshold received.");
-}
-
-const probabilityPct = probability * 100;
-const thresholdPct = threshold * 100;
-const riskCategory = data.risk_category;
 
 const riskDescriptions = {
     "Very Low Risk": "Minimal estimated probability of default.",
