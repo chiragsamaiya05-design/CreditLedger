@@ -47,7 +47,22 @@ class LoanApplication(BaseModel): #Pydantic Model (Validation)
     cb_person_default_on_file: str
     cb_person_cred_hist_length: int
 
+def get_risk_category(probability):
 
+    if probability < 0.10:
+        return "Very Low Risk"
+
+    elif probability < 0.25:
+        return "Low Risk"
+
+    elif probability < 0.50:
+        return "Medium Risk"
+
+    elif probability < 0.75:
+        return "High Risk"
+
+    else:
+        return "Very High Risk"
 
 @app.post('/predict')
 def predict(data: LoanApplication):
@@ -59,11 +74,14 @@ def predict(data: LoanApplication):
 
         prediction = int(probability >= ml_model["threshold"])
 
+        risk_category = get_risk_category(probability)
+
         return {
             "default_probability": float(probability),
             "default_prediction": prediction,
             "threshold": float(ml_model["threshold"]),
-            "Result": "High Risk" if prediction == 1 else "Low Risk"
+            "risk_category": risk_category,
+            "Result": "Default Risk" if prediction == 1 else "Low Default Risk",
         }
 
     except Exception as e:

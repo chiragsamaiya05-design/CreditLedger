@@ -163,47 +163,105 @@
 
   </form>
 
-  <section class="verdict" id="verdict" aria-live="polite" hidden>
-    <div class="verdict__inner">
+<section class="verdict" id="verdict" aria-live="polite" hidden>
 
-      <div class="verdict__gauge">
-        <svg viewBox="0 0 200 200" class="gauge">
-          <circle class="gauge__track" cx="100" cy="100" r="86" />
-          <circle class="gauge__fill" id="gaugeFill" cx="100" cy="100" r="86" />
-          <line class="gauge__threshold" id="gaugeThreshold" x1="100" y1="14" x2="100" y2="30" />
-        </svg>
-        <div class="gauge__readout">
-          <span class="gauge__number" id="probNumber">0</span><span class="gauge__percent">%</span>
-          <span class="gauge__caption">default probability</span>
-        </div>
+  <div class="verdict__heading">
+    <span class="section-label">CREDIT ASSESSMENT</span>
+    <h2>Loan Risk Assessment</h2>
+  </div>
+
+  <div class="verdict__inner">
+
+    <!-- Probability Gauge -->
+    <div class="verdict__gauge">
+      <svg viewBox="0 0 200 200" class="gauge">
+        <circle class="gauge__track" cx="100" cy="100" r="86" />
+        <circle class="gauge__fill" id="gaugeFill" cx="100" cy="100" r="86" />
+        <line class="gauge__threshold" id="gaugeThreshold" x1="100" y1="14" x2="100" y2="30" />
+      </svg>
+
+      <div class="gauge__readout">
+        <span class="gauge__number" id="probNumber">0</span>
+        <span class="gauge__percent">%</span>
+        <span class="gauge__caption">Default Probability</span>
       </div>
+    </div>
 
-      <div class="verdict__detail">
+    <!-- Risk Details -->
+    <div class="verdict__detail">
+
+      <div class="risk-result">
+
         <div class="stamp-wrap">
           <div class="stamp" id="stampBadge">
             <span id="stampText">LOW RISK</span>
           </div>
         </div>
 
-        <dl class="ledger-facts">
-          <div>
-            <dt>Default probability</dt>
-            <dd id="factProb">—</dd>
-          </div>
-          <div>
-            <dt>Decision threshold</dt>
-            <dd id="factThreshold">—</dd>
-          </div>
-          <div>
-            <dt>Model verdict</dt>
-            <dd id="factResult">—</dd>
-          </div>
-        </dl>
+        <p id="riskDescription" class="risk-description">
+          Risk assessment will appear here.
+        </p>
+
       </div>
 
-    </div>
-  </section>
+      <!-- Five-Level Risk Indicator -->
+      <div class="risk-scale">
 
+        <div class="risk-scale__heading">
+          <span>RISK LEVEL</span>
+          <span id="activeRiskLabel">—</span>
+        </div>
+
+        <div class="risk-scale__bar" id="riskScale">
+
+          <span class="level-1" data-risk="Very Low Risk"></span>
+          <span class="level-2" data-risk="Low Risk"></span>
+          <span class="level-3" data-risk="Medium Risk"></span>
+          <span class="level-4" data-risk="High Risk"></span>
+          <span class="level-5" data-risk="Very High Risk"></span>
+
+        </div>
+
+        <div class="risk-scale__labels">
+          <span>Very Low</span>
+          <span>Low</span>
+          <span>Medium</span>
+          <span>High</span>
+          <span>Very High</span>
+        </div>
+
+      </div>
+
+      <!-- Assessment Facts -->
+      <dl class="ledger-facts">
+
+        <div>
+          <dt>Default probability</dt>
+          <dd id="factProb">—</dd>
+        </div>
+
+        <div>
+          <dt>Decision threshold</dt>
+          <dd id="factThreshold">—</dd>
+        </div>
+
+        <div>
+          <dt>Risk category</dt>
+          <dd id="factRiskCategory">—</dd>
+        </div>
+
+        <div>
+          <dt>Model verdict</dt>
+          <dd id="factResult">—</dd>
+        </div>
+
+      </dl>
+
+    </div>
+
+  </div>
+
+</section>
   <footer class="foot">
     <p>Figures are model estimates, not a lending decision. Recorded for reference only.</p>
   </footer>

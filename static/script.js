@@ -84,43 +84,129 @@
     requestAnimationFrame(tick);
   }
 
-  function renderVerdict(data) {
-    const probabilityPct = data.default_probability * 100;
-    const thresholdPct = data.threshold * 100;
-    const isHighRisk = data.default_prediction === 1;
+ 
+function renderVerdict(data) {
+    const validRiskCategories = [
+    "Very Low Risk",
+    "Low Risk",
+    "Medium Risk",
+    "High Risk",
+    "Very High Risk"
+];
+
+
+
+if (!validRiskCategories.includes(riskCategory)) {
+    throw new Error("Invalid or missing risk category from API.");
+}
+
+const probability = Number(data.default_probability);
+const threshold = Number(data.threshold);
+
+if (
+    !Number.isFinite(probability) ||
+    !Number.isFinite(threshold) ||
+    probability < 0 ||
+    probability > 1 ||
+    threshold < 0 ||
+    threshold > 1
+) {
+    throw new Error("Invalid probability or threshold received.");
+}
+
+const probabilityPct = probability * 100;
+const thresholdPct = threshold * 100;
+const riskCategory = data.risk_category;
+
+const riskDescriptions = {
+    "Very Low Risk": "Minimal estimated probability of default.",
+    "Low Risk": "Relatively low estimated default risk.",
+    "Medium Risk": "Moderate estimated default probability.",
+    "High Risk": "Elevated estimated default risk.",
+    "Very High Risk": "Substantially elevated estimated default risk."
+};
+
+document.getElementById("riskDescription").textContent =
+    riskDescriptions[riskCategory] || "Risk assessment unavailable.";
+
+document.getElementById("activeRiskLabel").textContent =
+    riskCategory || "Unknown";
+
+document.querySelectorAll("#riskScale span").forEach(segment => {
+    segment.classList.toggle(
+        "active",
+        segment.dataset.risk === riskCategory
+    );
+});
+
 
     verdict.hidden = false;
     verdict.scrollIntoView({ behavior: "smooth", block: "nearest" });
 
+    // Risk category colors
+    const riskColors = {
+        "Very Low Risk": "#5f9270",
+        "Low Risk": "#83a96b",
+        "Medium Risk": "#d6b65e",
+        "High Risk": "#d58a48",
+        "Very High Risk": "#c1584d"
+    };
+
+    const riskClasses = {
+        "Very Low Risk": "risk-very-low",
+        "Low Risk": "risk-low",
+        "Medium Risk": "risk-medium",
+        "High Risk": "risk-high",
+        "Very High Risk": "risk-very-high"
+    };
+
+    const riskColor = riskColors[riskCategory] || "var(--brass)";
+
     // Gauge fill
     const offset = GAUGE_CIRCUMFERENCE * (1 - probabilityPct / 100);
-    gaugeFill.style.stroke = isHighRisk ? "var(--risk-red)" : "var(--brass)";
+
+    gaugeFill.style.stroke = riskColor;
+
     requestAnimationFrame(() => {
-      gaugeFill.style.strokeDashoffset = offset;
+        gaugeFill.style.strokeDashoffset = offset;
     });
 
     // Threshold tick
     gaugeThreshold.style.transform = `rotate(${thresholdPct * 3.6}deg)`;
 
-    // Number readout
+    // Probability animation
     animateNumber(probNumber, 0, probabilityPct, 1000);
 
-    // Stamp
-    stampBadge.classList.remove("stamp--in", "risk-high");
-    void stampBadge.offsetWidth; // restart animation
-    if (isHighRisk) {
-      stampBadge.classList.add("risk-high");
-      stampText.textContent = "HIGH RISK";
-    } else {
-      stampText.textContent = "LOW RISK";
-    }
-    requestAnimationFrame(() => stampBadge.classList.add("stamp--in"));
+    // Risk category badge
+    stampBadge.className = "stamp";
+
+    stampBadge.classList.add(
+        riskClasses[riskCategory] || "risk-low"
+    );
+
+    stampText.textContent = riskCategory
+        ? riskCategory.toUpperCase()
+        : "UNKNOWN RISK";
+
+    void stampBadge.offsetWidth;
+
+    requestAnimationFrame(() => {
+        stampBadge.classList.add("stamp--in");
+    });
 
     // Ledger facts
     factProb.textContent = `${probabilityPct.toFixed(1)}%`;
     factThreshold.textContent = `${thresholdPct.toFixed(1)}%`;
-    factResult.textContent = data.Result;
-  }
+    factResult.textContent = data.Result || data.result || "—";
+
+    // Optional risk category field
+    const factRiskCategory = document.getElementById("factRiskCategory");
+
+    if (factRiskCategory) {
+        factRiskCategory.textContent = riskCategory || "—";
+    }
+}
+
 
   // ---------- Submit ----------
   form.addEventListener("submit", async (e) => {
