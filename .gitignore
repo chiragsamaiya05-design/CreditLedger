@@ -1,5 +1,39 @@
+# Virtual Environments
 .venv/
+venv/
+env/
+fraud_env/
+
+# Python Cache
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Environment Variables
 .env
-*.pkl
+.env.*
+!.env.example
+
+# Jupyter
 .ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build
+build/
+dist/
+*.egg-info/
